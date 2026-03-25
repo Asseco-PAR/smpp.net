@@ -42,5 +42,13 @@ namespace JulMar.Smpp.Esme
         {
             rx_.Process(pdu);
         }
+        
+        /// <summary>
+        /// This processes the submit_sm_resp PDU
+        /// </summary>
+        /// <param name="pdu">Protocol Data Unit being processed</param>
+        public override void Process(submit_sm_resp pdu)
+        {
+        }
     }
 }

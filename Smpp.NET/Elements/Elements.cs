@@ -79,7 +79,7 @@ namespace JulMar.Smpp.Elements
     public class SmppOctetString : ISupportSmppByteStream
     {
         // Class data
-        private string data_;
+        private string data_ = "";
 
         /// <summary>
         /// Default constructor
@@ -448,8 +448,8 @@ namespace JulMar.Smpp.Elements
 							dt -= new TimeSpan(0, 0, nn * 15, 0, 0);
 
 						// Now convert it to our local time.
-						TimeZone localZone = TimeZone.CurrentTimeZone;
-						data_ = localZone.ToLocalTime(dt);
+						TimeZoneInfo localZone = TimeZoneInfo.Local;
+						data_ = TimeZoneInfo.ConvertTimeFromUtc(dt, localZone);
 					}
 				}
 				else
@@ -503,7 +503,7 @@ namespace JulMar.Smpp.Elements
                     {
                         if (includeUTC_)
                         {
-                            TimeZone thisZone = TimeZone.CurrentTimeZone;
+                            TimeZoneInfo thisZone = TimeZoneInfo.Local;
                             int nn = data_.Millisecond / 100;
                             int yy = data_.Year;
                             if (yy > 100)

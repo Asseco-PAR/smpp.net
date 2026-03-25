@@ -31,7 +31,6 @@ namespace JulMar.Smpp.Pdu {
 		/// <summary>
 		/// This provides access to the list.
 		/// </summary>
-		[CLSCompliant(false)]
 		public List<string> DistributionLists {
 			get { return distList_; }
 			set {

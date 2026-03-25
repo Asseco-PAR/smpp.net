@@ -18,8 +18,7 @@ namespace JulMar.Smpp
         /// Default constructor
         /// </summary>
         internal SmppEventArgs()
-        {
-        }
+        { }
 
         /// <summary>
         /// Constructor for the Smpp EventHandler class.

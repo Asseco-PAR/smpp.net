@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -66,6 +67,8 @@ namespace JulMar.Smpp.Utility
     /// </summary>
     public class SocketClient : IDisposable
     {
+        private readonly ILogger _logger = SmppLogging.CreateLogger<SocketClient>();
+
         /// <summary>
         /// This is the default packet size which is queued against sockets.
         /// </summary>
@@ -223,23 +226,7 @@ namespace JulMar.Smpp.Utility
 
             // Establish a connection
             IAsyncResult ar = sock_.BeginConnect(new IPEndPoint(addr, port), new AsyncCallback(ConnectCallbackHandler), this);
-/*
-            try
-            {
-                sock_.EndConnect(ar);
-            }
-            catch (SocketException ex)
-            {
-                try
-                {
-                    if (OnFailure != null)
-                        OnFailure(this, new ErrorEventArgs(this, ErrorEventArgs.SocketOperation.Connect, ex));
-                }
-                catch
-                {
-                }
-            }
- */ 
+            ar.AsyncWaitHandle.WaitOne();
         }
 
         /// <summary>
@@ -513,7 +500,14 @@ namespace JulMar.Smpp.Utility
                     {
                         OnFailure(this, errEv);
                     }
-                    catch { }
+                    catch (Exception callbackEx)
+                    {
+                        _logger.LogError(callbackEx, "Error in OnFailure callback during send for {RemoteEndPoint}", sock_.RemoteEndPoint);
+                    }
+                }
+                else
+                {
+                    _logger.LogError(ex, "Socket send failure for {RemoteEndPoint}", sock_.RemoteEndPoint);
                 }
             }
             finally
@@ -598,7 +592,14 @@ namespace JulMar.Smpp.Utility
                     {
                         OnFailure(this, errEv);
                     }
-                    catch { }
+                    catch (Exception callbackEx)
+                    {
+                        _logger.LogError(callbackEx, "Error in OnFailure callback during send for {RemoteEndPoint}", sock_.RemoteEndPoint);
+                    }
+                }
+                else
+                {
+                    _logger.LogError(ex, "Socket send failure for {RemoteEndPoint}", sock_.RemoteEndPoint);
                 }
             }
         }
@@ -645,7 +646,14 @@ namespace JulMar.Smpp.Utility
                     {
                         OnFailure(this, errEv);
                     }
-                    catch { }
+                    catch (Exception callbackEx)
+                    {
+                        _logger.LogError(callbackEx, "Error in OnFailure callback during send for {RemoteEndPoint}", sock_.RemoteEndPoint);
+                    }
+                }
+                else
+                {
+                    _logger.LogError(ex, "Socket send failure for {RemoteEndPoint}", sock_.RemoteEndPoint);
                 }
             }
         }
@@ -755,7 +763,14 @@ namespace JulMar.Smpp.Utility
                     {
                         OnFailure(this, errEv);
                     }
-                    catch { }
+                    catch (Exception callbackEx)
+                    {
+                        _logger.LogError(callbackEx, "Error in OnFailure callback during send for {RemoteEndPoint}", sock_.RemoteEndPoint);
+                    }
+                }
+                else
+                {
+                    _logger.LogError(ex, "Socket send failure for {RemoteEndPoint}", sock_.RemoteEndPoint);
                 }
             }
         }

@@ -94,7 +94,6 @@ namespace JulMar.Smpp.Smsc
         /// This property returns the current sessions.
         /// </summary>
         /// <value></value>
-        [CLSCompliant(false)]
         public IList<SmscSession> CurrentSessions
         {
             get

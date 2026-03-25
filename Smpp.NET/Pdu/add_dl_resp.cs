@@ -1,5 +1,4 @@
 ﻿using System;
-using JulMar.Smpp;
 using JulMar.Smpp.Utility;
 
 namespace JulMar.Smpp.Pdu {

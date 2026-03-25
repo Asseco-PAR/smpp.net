@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JulMar.Smpp {
+namespace JulMar.Smpp
+{
 	/// <summary>
 	/// Supported versions of the SMPP protocol
 	/// </summary>
-	public struct SmppVersion {
+	public struct SmppVersion
+	{
 		/// <summary>
 		/// SMPP Version 3.3
 		/// </summary>
@@ -24,7 +26,8 @@ namespace JulMar.Smpp {
 	/// <summary>
 	/// The SMPP commands
 	/// </summary>
-	internal struct Commands {
+	internal struct Commands
+	{
 		internal const int BIND_RECEIVER = 0x00000001;
 		internal const int BIND_TRANSMITTER = 0x00000002;
 		internal const int QUERY_SM = 0x00000003;
@@ -78,10 +81,12 @@ namespace JulMar.Smpp {
 		internal const int CANCEL_BROADCAST_SM_RESP = unchecked((int)0x80000113);
 	}
 
+
 	/// <summary>
 	/// SMPP result codes
 	/// </summary>
-	public struct StatusCodes {
+	public struct StatusCodes
+	{
 		/// <summary>
 		/// Success - no error.
 		/// </summary>
@@ -589,46 +594,47 @@ namespace JulMar.Smpp {
 	/// <summary>
 	/// SMPP Optional Parameter Tag definitions (5.3.2)
 	/// </summary>
-	internal struct ParameterTags {
-		internal const short TAG_DEST_ADDR_SUBUNIT = 0x0005;	// GSM
-		internal const short TAG_DEST_NETWORK_TYPE = 0x0006;	// Generic
-		internal const short TAG_DEST_BEARER_TYPE = 0x0007;	// Generic
-		internal const short TAG_DEST_TELEMATICS_ID = 0x0008;	// GSM
+	internal struct ParameterTags
+	{
+		internal const short TAG_DEST_ADDR_SUBUNIT = 0x0005;    // GSM
+		internal const short TAG_DEST_NETWORK_TYPE = 0x0006;    // Generic
+		internal const short TAG_DEST_BEARER_TYPE = 0x0007; // Generic
+		internal const short TAG_DEST_TELEMATICS_ID = 0x0008;   // GSM
 		internal const short TAG_SOURCE_ADDR_SUBUNIT = 0x000D;// GSM
 		internal const short TAG_SOURCE_NETWORK_TYPE = 0x000E;// Generic
-		internal const short TAG_SOURCE_BEARER_TYPE = 0x000F;	// Generic
+		internal const short TAG_SOURCE_BEARER_TYPE = 0x000F;   // Generic
 		internal const short TAG_SOURCE_TELEMATICS_ID = 0x0010;// GSM
-		internal const short TAG_QOS_TIME_TO_LIVE = 0x0017;	// Generic
-		internal const short TAG_PAYLOAD_TYPE = 0x0019;	    // Generic
+		internal const short TAG_QOS_TIME_TO_LIVE = 0x0017; // Generic
+		internal const short TAG_PAYLOAD_TYPE = 0x0019;     // Generic
 		internal const short TAG_ADD_STATUS_INFO_TEXT = 0x001D;// Generic
 		internal const short TAG_RECEIPTED_MESSAGE_ID = 0x001E;// Generic
-		internal const short TAG_MS_MSG_WAIT_FACIL = 0x0030;	// GSM
-		internal const short TAG_PRIVACY_INDICATOR = 0x0201;	// CDMA, TDMA
-		internal const short TAG_SOURCE_SUBADDRESS = 0x0202;	// CDMA, TDMA
-		internal const short TAG_DEST_SUBADDRESS = 0x0203;	// CDMA, TDMA
-		internal const short TAG_USER_MESSAGE_REF = 0x0204;	// Generic
-		internal const short TAG_USER_RESPONSE_CODE = 0x0205;	// CDMA, TDMA
-		internal const short TAG_SOURCE_PORT = 0x020A;	    // Generic
-		internal const short TAG_DESTINATION_PORT = 0x020B;	// Generic
-		internal const short TAG_SAR_MSG_REF_NUM = 0x020C;	// Generic
-		internal const short TAG_LANGUAGE_INDICATOR = 0x020D;	// CDMA, TDMA
-		internal const short TAG_SAR_TOTAL_SEGMENTS = 0x020E;	// Generic
-		internal const short TAG_SAR_SGEMENT_SEQNUM = 0x020F;	// Generic
+		internal const short TAG_MS_MSG_WAIT_FACIL = 0x0030;    // GSM
+		internal const short TAG_PRIVACY_INDICATOR = 0x0201;    // CDMA, TDMA
+		internal const short TAG_SOURCE_SUBADDRESS = 0x0202;    // CDMA, TDMA
+		internal const short TAG_DEST_SUBADDRESS = 0x0203;  // CDMA, TDMA
+		internal const short TAG_USER_MESSAGE_REF = 0x0204; // Generic
+		internal const short TAG_USER_RESPONSE_CODE = 0x0205;   // CDMA, TDMA
+		internal const short TAG_SOURCE_PORT = 0x020A;      // Generic
+		internal const short TAG_DESTINATION_PORT = 0x020B; // Generic
+		internal const short TAG_SAR_MSG_REF_NUM = 0x020C;  // Generic
+		internal const short TAG_LANGUAGE_INDICATOR = 0x020D;   // CDMA, TDMA
+		internal const short TAG_SAR_TOTAL_SEGMENTS = 0x020E;   // Generic
+		internal const short TAG_SAR_SGEMENT_SEQNUM = 0x020F;   // Generic
 		internal const short TAG_SC_INTERFACE_VERSION = 0x0210;// Generic
 		internal const short TAG_CALLBACK_NUM_PRES_ID = 0x0302;// TDMA
-		internal const short TAG_CALLBACK_NUM_ATAG = 0x0303;	// TDMA
-		internal const short TAG_NUMBER_OF_MESSAGES = 0x0304;	// CDMA
-		internal const short TAG_CALLBACK_NUM = 0x0381;	    // CDMA, TDMA, GSM, iDEN
-		internal const short TAG_DPF_RESULT = 0x0420;	        // Generic
-		internal const short TAG_SET_DPF = 0x0421;	        // Generic
-		internal const short TAG_MS_AVAIL_STATUS = 0x0422;	// Generic
-		internal const short TAG_NETWORK_ERROR_CODE = 0x0423;	// Generic
-		internal const short TAG_MESSAGE_PAYLOAD = 0x0424;	// Generic
+		internal const short TAG_CALLBACK_NUM_ATAG = 0x0303;    // TDMA
+		internal const short TAG_NUMBER_OF_MESSAGES = 0x0304;   // CDMA
+		internal const short TAG_CALLBACK_NUM = 0x0381;     // CDMA, TDMA, GSM, iDEN
+		internal const short TAG_DPF_RESULT = 0x0420;           // Generic
+		internal const short TAG_SET_DPF = 0x0421;          // Generic
+		internal const short TAG_MS_AVAIL_STATUS = 0x0422;  // Generic
+		internal const short TAG_NETWORK_ERROR_CODE = 0x0423;   // Generic
+		internal const short TAG_MESSAGE_PAYLOAD = 0x0424;  // Generic
 		internal const short TAG_DELIVERY_FAIL_REASON = 0x0425;// Generic
-		internal const short TAG_MORE_MSGS_TO_SEND = 0x0426;	// GSM
-		internal const short TAG_MESSAGE_STATE = 0x0427;	    // Generic
+		internal const short TAG_MORE_MSGS_TO_SEND = 0x0426;    // GSM
+		internal const short TAG_MESSAGE_STATE = 0x0427;        // Generic
 		internal const short TAG_CONGESTION_STATE = 0x0428;   // Generic
-		internal const short TAG_USSD_SERVICE_OP = 0x0501;	// GSM (USSD)
+		internal const short TAG_USSD_SERVICE_OP = 0x0501;  // GSM (USSD)
 		internal const short TAG_BROADCAST_CHANNEL_INDICATOR = 0x600; // GSM
 		internal const short TAG_BROADCAST_CONTENT_TYPE = 0x601; // CDMA, TDMA, GSM
 		internal const short TAG_BROADCAST_CONTENT_TYPE_INFO = 0x602; // CDMA, TDMA
@@ -648,11 +654,11 @@ namespace JulMar.Smpp {
 		internal const short TAG_DEST_ADDR_NP_RESOLUTION = 0x611; // CDMA, TDMA (US Only)
 		internal const short TAG_DEST_ADDR_NP_INFORMATION = 0x612; // CDMA, TDMA (US Only)
 		internal const short TAG_DEST_ADDR_NP_COUNTRY = 0x613;    // CDMA, TDMA (US Only)
-		internal const short TAG_DISPLAY_TIME = 0x1201;	    // CDMA, TDMA
-		internal const short TAG_SMS_SIGNAL = 0x1203;	        // TDMA
-		internal const short TAG_MS_VALIDITY = 0x1204;	    // CDMA, TDMA
+		internal const short TAG_DISPLAY_TIME = 0x1201;     // CDMA, TDMA
+		internal const short TAG_SMS_SIGNAL = 0x1203;           // TDMA
+		internal const short TAG_MS_VALIDITY = 0x1204;      // CDMA, TDMA
 		internal const short TAG_ALERT_ON_MSG_DELIVERY = 0x130C;// CDMA
-		internal const short TAG_ITS_REPLY_TYPE = 0x1380;	    // CDMA
-		internal const short TAG_ITS_SESSION_INFO = 0x1383;	// CDMA
+		internal const short TAG_ITS_REPLY_TYPE = 0x1380;       // CDMA
+		internal const short TAG_ITS_SESSION_INFO = 0x1383; // CDMA
 	}
 }

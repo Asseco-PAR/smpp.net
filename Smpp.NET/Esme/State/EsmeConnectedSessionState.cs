@@ -1,5 +1,4 @@
 using System;
-using JulMar.Smpp;
 using JulMar.Smpp.Pdu;
 using JulMar.Smpp.Utility;
 

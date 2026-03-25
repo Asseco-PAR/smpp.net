@@ -291,6 +291,7 @@ namespace JulMar.Smpp.Esme
 				{
 					response = new bind_transceiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
 				}
+
 				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
