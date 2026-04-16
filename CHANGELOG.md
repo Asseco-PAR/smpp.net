@@ -6,6 +6,22 @@ This is a fork of [markjulmar/smpp.net](https://github.com/markjulmar/smpp.net)
 (last upstream commit: `51bad848b658fe42e7f427a85dcc1e6a0ab6f9bf`, MIT License). Changes made
 downstream of that point are documented below.
 
+## [1.2.0] - 2026-04-16
+### Fixed
+- Pending request slots are now always released via try/finally, preventing zombie entries when SendPdu or WaitForResponse throws.
+- PendingRequestLimit property now actually controls the limit (was comparing against hardcoded constant of 10).
+- SmscSession.DeliverSm: added missing null check and WaitForResponse.
+
+### Added
+- Background stale-entry reaper timer (purges zombies older than 2x timeout).
+- ClearPendingRequests() method for manual queue reset.
+- PendingRequestCount property for diagnostics.
+
+### Changed
+- Default pending request limit raised from 10 to 50.
+
+---
+
 ## [1.1.0] - 2026-04-16
 ### Added
 - `Utility/EncodingHelper.cs` - maps SMPP `DataEncoding` values to
