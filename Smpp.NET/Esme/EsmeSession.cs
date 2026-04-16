@@ -132,31 +132,37 @@ namespace JulMar.Smpp.Esme
 			PduSyncronizer sync = AddWaitingPdu(pdu);
 			if (sync != null)
 			{
-				if (SendPdu(pdu))
+				try
 				{
-					if (sync.WaitForResponse())
+					if (SendPdu(pdu))
 					{
-						response = sync.PduResponse as bind_transmitter_resp;
-						if (response != null)
+						if (sync.WaitForResponse())
 						{
-							if (response.Status == StatusCodes.ESME_ROK)
-								base.CurrentState = new EsmeBoundTXSessionState(this);
+							response = sync.PduResponse as bind_transmitter_resp;
+							if (response != null)
+							{
+								if (response.Status == StatusCodes.ESME_ROK)
+									base.CurrentState = new EsmeBoundTXSessionState(this);
+							}
+							else
+							{
+								response = new bind_transmitter_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							}
 						}
 						else
 						{
-							response = new bind_transmitter_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							response = new bind_transmitter_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
 						}
 					}
 					else
 					{
-						response = new bind_transmitter_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+						response = new bind_transmitter_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
 					}
 				}
-				else
+				finally
 				{
-					response = new bind_transmitter_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
+					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 				}
-				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
 			{
@@ -200,31 +206,37 @@ namespace JulMar.Smpp.Esme
 			PduSyncronizer sync = AddWaitingPdu(pdu);
 			if (sync != null)
 			{
-				if (SendPdu(pdu))
+				try
 				{
-					if (sync.WaitForResponse())
+					if (SendPdu(pdu))
 					{
-						response = sync.PduResponse as bind_receiver_resp;
-						if (response != null)
+						if (sync.WaitForResponse())
 						{
-							if (response.Status == StatusCodes.ESME_ROK)
-								base.CurrentState = new EsmeBoundRXSessionState(this);
+							response = sync.PduResponse as bind_receiver_resp;
+							if (response != null)
+							{
+								if (response.Status == StatusCodes.ESME_ROK)
+									base.CurrentState = new EsmeBoundRXSessionState(this);
+							}
+							else
+							{
+								response = new bind_receiver_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							}
 						}
 						else
 						{
-							response = new bind_receiver_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							response = new bind_receiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
 						}
 					}
 					else
 					{
-						response = new bind_receiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+						response = new bind_receiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
 					}
 				}
-				else
+				finally
 				{
-					response = new bind_receiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
+					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 				}
-				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
 			{
@@ -267,32 +279,37 @@ namespace JulMar.Smpp.Esme
 			PduSyncronizer sync = AddWaitingPdu(pdu);
 			if (sync != null)
 			{
-				if (SendPdu(pdu))
+				try
 				{
-					if (sync.WaitForResponse())
+					if (SendPdu(pdu))
 					{
-						response = sync.PduResponse as bind_transceiver_resp;
-						if (response != null)
+						if (sync.WaitForResponse())
 						{
-							if (response.Status == StatusCodes.ESME_ROK)
-								base.CurrentState = new EsmeBoundTRXSessionState(this);
+							response = sync.PduResponse as bind_transceiver_resp;
+							if (response != null)
+							{
+								if (response.Status == StatusCodes.ESME_ROK)
+									base.CurrentState = new EsmeBoundTRXSessionState(this);
+							}
+							else
+							{
+								response = new bind_transceiver_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							}
 						}
 						else
 						{
-							response = new bind_transceiver_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							response = new bind_transceiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
 						}
 					}
 					else
 					{
-						response = new bind_transceiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+						response = new bind_transceiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
 					}
 				}
-				else
+				finally
 				{
-					response = new bind_transceiver_resp(pdu.SequenceNumber, StatusCodes.ESME_RBINDFAIL);
+					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 				}
-
-				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
 			{
@@ -334,26 +351,32 @@ namespace JulMar.Smpp.Esme
 			PduSyncronizer sync = AddWaitingPdu(pdu);
 			if (sync != null)
 			{
-				if (IsBound && SendPdu(pdu))
+				try
 				{
-					if (sync.WaitForResponse())
+					if (IsBound && SendPdu(pdu))
 					{
-						response = sync.PduResponse as submit_sm_resp;
-						if (response == null)
+						if (sync.WaitForResponse())
 						{
-							response = new submit_sm_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							response = sync.PduResponse as submit_sm_resp;
+							if (response == null)
+							{
+								response = new submit_sm_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							}
+						}
+						else
+						{
+							response = new submit_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
 						}
 					}
 					else
 					{
-						response = new submit_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+						response = new submit_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RSUBMITFAIL);
 					}
 				}
-				else
+				finally
 				{
-					response = new submit_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RSUBMITFAIL);
+					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 				}
-				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
 			{
@@ -396,26 +419,32 @@ namespace JulMar.Smpp.Esme
 			PduSyncronizer sync = AddWaitingPdu(pdu);
 			if (sync != null)
 			{
-				if (IsBound && SendPdu(pdu))
+				try
 				{
-					if (sync.WaitForResponse())
+					if (IsBound && SendPdu(pdu))
 					{
-						response = sync.PduResponse as enquire_link_resp;
-						if (response == null)
+						if (sync.WaitForResponse())
 						{
-							response = new enquire_link_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							response = sync.PduResponse as enquire_link_resp;
+							if (response == null)
+							{
+								response = new enquire_link_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+							}
+						}
+						else
+						{
+							response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
 						}
 					}
 					else
 					{
-						response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+						response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RSUBMITFAIL);
 					}
 				}
-				else
+				finally
 				{
-					response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RSUBMITFAIL);
+					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 				}
-				FindAndRemoveWaitingPdu(pdu.SequenceNumber);
 			}
 			else
 			{

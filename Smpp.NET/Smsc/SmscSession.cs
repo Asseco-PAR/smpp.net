@@ -213,22 +213,44 @@ namespace JulMar.Smpp.Smsc
         {
             deliver_sm_resp rpdu = null;
             PduSyncronizer evt = AddWaitingPdu(pdu);
-            if (IsBound && SendPdu(pdu))
+            if (evt != null)
             {
-                SmppPdu pduR = evt.PduResponse;
-                if ((pduR as deliver_sm_resp) != null)
-                    rpdu = (deliver_sm_resp)pduR;
-                else
+                try
                 {
-                    rpdu = new deliver_sm_resp();
-                    rpdu.Status = pduR.Status;
+                    if (IsBound && SendPdu(pdu))
+                    {
+                        if (evt.WaitForResponse())
+                        {
+                            SmppPdu pduR = evt.PduResponse;
+                            if ((pduR as deliver_sm_resp) != null)
+                                rpdu = (deliver_sm_resp)pduR;
+                            else
+                            {
+                                rpdu = new deliver_sm_resp();
+                                rpdu.Status = pduR.Status;
+                            }
+                        }
+                        else
+                        {
+                            rpdu = new deliver_sm_resp();
+                            rpdu.Status = StatusCodes.ESME_RINVEXPIRY;
+                        }
+                    }
+                    else
+                    {
+                        rpdu = new deliver_sm_resp();
+                        rpdu.Status = StatusCodes.ESME_RDELIVERYFAILURE;
+                    }
+                }
+                finally
+                {
+                    FindAndRemoveWaitingPdu(pdu.SequenceNumber);
                 }
             }
             else
             {
-                FindAndRemoveWaitingPdu(pdu.SequenceNumber);
                 rpdu = new deliver_sm_resp();
-                rpdu.Status = StatusCodes.ESME_RDELIVERYFAILURE;
+                rpdu.Status = StatusCodes.ESME_RMSGQFUL;
             }
             return rpdu;
         }
