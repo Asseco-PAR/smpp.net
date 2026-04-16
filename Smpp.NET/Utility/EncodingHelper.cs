@@ -1,4 +1,5 @@
 using System.Text;
+using JulMar.Smpp.Elements;
 
 namespace JulMar.Smpp.Utility
 {
