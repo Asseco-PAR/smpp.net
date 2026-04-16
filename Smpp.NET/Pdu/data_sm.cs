@@ -99,16 +99,28 @@ namespace JulMar.Smpp.Pdu {
 		/// Up to 254 bytes of text message to send.
 		/// </summary>
 		public string Message {
-			get { return msgPayload_.TextValue; }
-			set { msgPayload_.TextValue = value; }
+			get {
+				msgPayload_.DataCoding = dataCoding_.Value;
+				return msgPayload_.TextValue;
+			}
+			set {
+				msgPayload_.DataCoding = dataCoding_.Value;
+				msgPayload_.TextValue = value;
+			}
 		}
 
 		/// <summary>
 		/// This retrieves the short message in a byte array
 		/// </summary>
 		public byte[] BinaryMessage {
-			get { return msgPayload_.BinaryValue; }
-			set { msgPayload_.BinaryValue = value; }
+			get {
+				msgPayload_.DataCoding = dataCoding_.Value;
+				return msgPayload_.BinaryValue;
+			}
+			set {
+				msgPayload_.DataCoding = dataCoding_.Value;
+				msgPayload_.BinaryValue = value;
+			}
 		}
 
 		/// <summary>

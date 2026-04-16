@@ -172,10 +172,12 @@ namespace JulMar.Smpp.Pdu {
 		/// </summary>
 		public string Message {
 			get {
+				msgPayload_.DataCoding = dataCoding_.Value;
 				return msgPayload_.TextValue;
 			}
 
 			set {
+				msgPayload_.DataCoding = dataCoding_.Value;
 				msgPayload_.TextValue = value;
 			}
 		}
@@ -185,10 +187,12 @@ namespace JulMar.Smpp.Pdu {
 		/// </summary>
 		public byte[] BinaryMessage {
 			get {
+				msgPayload_.DataCoding = dataCoding_.Value;
 				return msgPayload_.BinaryValue;
 			}
 
 			set {
+				msgPayload_.DataCoding = dataCoding_.Value;
 				msgPayload_.BinaryValue = value;
 			}
 		}

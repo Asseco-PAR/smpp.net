@@ -173,13 +173,27 @@ namespace JulMar.Smpp.Pdu {
 		/// </summary>
 		public string Message {
 			get {
+				// Propagate the current data_coding to the backing elements so
+				// that their decoders use the right System.Text.Encoding.
+				msg_.DataCoding = dataCoding_.Value;
+				msgPayload_.DataCoding = dataCoding_.Value;
 				return (msg_.Length > 0) ?
 					msg_.TextValue :
 					msgPayload_.TextValue;
 			}
 
 			set {
-				if (value.Length > short_message.MAX_LENGTH) {
+				// Propagate current data_coding BEFORE writing so encoders use
+				// the right encoding and the short/long branch uses the byte
+				// count in that encoding, not the .NET character count.
+				msg_.DataCoding = dataCoding_.Value;
+				msgPayload_.DataCoding = dataCoding_.Value;
+
+				int byteLen = (value == null) ? 0 :
+					JulMar.Smpp.Utility.EncodingHelper
+						.For(dataCoding_.Value).GetByteCount(value);
+
+				if (byteLen > short_message.MAX_LENGTH) {
 					msg_.TextValue = "";
 					msgPayload_.TextValue = value;
 				} else {
@@ -194,13 +208,17 @@ namespace JulMar.Smpp.Pdu {
 		/// </summary>
 		public byte[] BinaryMessage {
 			get {
+				msg_.DataCoding = dataCoding_.Value;
+				msgPayload_.DataCoding = dataCoding_.Value;
 				return (msg_.Length > 0) ?
 					msg_.BinaryValue :
 					msgPayload_.BinaryValue;
 			}
 
 			set {
-				if (value.Length > short_message.MAX_LENGTH) {
+				msg_.DataCoding = dataCoding_.Value;
+				msgPayload_.DataCoding = dataCoding_.Value;
+				if (value != null && value.Length > short_message.MAX_LENGTH) {
 					msg_.BinaryValue = null;
 					msgPayload_.BinaryValue = value;
 				} else {
@@ -228,6 +246,8 @@ namespace JulMar.Smpp.Pdu {
 			writer.Add(repPresent_);
 			writer.Add(dataCoding_);
 			writer.Add(defMsgId_);
+			msg_.DataCoding = dataCoding_.Value;
+			msgPayload_.DataCoding = dataCoding_.Value;
 			writer.Add(msg_);
 		}
 
@@ -249,6 +269,8 @@ namespace JulMar.Smpp.Pdu {
 			reader.ReadObject(repPresent_);
 			reader.ReadObject(dataCoding_);
 			reader.ReadObject(defMsgId_);
+			msg_.DataCoding = dataCoding_.Value;
+			msgPayload_.DataCoding = dataCoding_.Value;
 			reader.ReadObject(msg_);
 		}
 

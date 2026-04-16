@@ -118,7 +118,7 @@ namespace JulMar.Smpp.Elements
         /// This method retrieves the C-Octet string from the byte stream
         /// </summary>
         /// <param name="reader">Byte stream</param>
-        public void GetFromStream(SmppReader reader)
+        public virtual void GetFromStream(SmppReader reader)
         {
             int len = (int)reader.ReadByte();
             if (len > 0)
@@ -130,7 +130,7 @@ namespace JulMar.Smpp.Elements
         /// This method adds our information to the byte stream.
         /// </summary>
         /// <param name="writer"></param>
-        public void AddToStream(SmppWriter writer)
+        public virtual void AddToStream(SmppWriter writer)
         {
             writer.Add((byte)data_.Length);
             writer.Add(data_, false);
