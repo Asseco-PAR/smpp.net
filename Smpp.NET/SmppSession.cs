@@ -82,7 +82,7 @@ namespace JulMar.Smpp
         private SmppPdu pduRequest = null;
         private SmppPdu pduResponse = null;
         private TimeSpan responseTimeout;
-		private DateTime createdAt;
+        private DateTime createdAt;
 
         /// <summary>
         /// Constructor for the PduSyncronizer
@@ -93,7 +93,7 @@ namespace JulMar.Smpp
         {
             this.pduRequest = pdu;
             this.responseTimeout = responseTimeout;
-			this.createdAt = DateTime.UtcNow;
+            this.createdAt = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -115,30 +115,30 @@ namespace JulMar.Smpp
             set { pduResponse = value; doneEvent_.Set(); }
         }
 
-		/// <summary>
-		/// Returns the UTC time this synchronizer was created.
-		/// Used by the stale-entry reaper to detect zombie slots.
-		/// </summary>
-		public DateTime CreatedAt
-		{
-			get { return createdAt; }
-		}
+        /// <summary>
+        /// Returns the UTC time this synchronizer was created.
+        /// Used by the stale-entry reaper to detect zombie slots.
+        /// </summary>
+        public DateTime CreatedAt
+        {
+            get { return createdAt; }
+        }
 
-		/// <summary>
-		/// Returns the response timeout configured for this request.
-		/// </summary>
-		public TimeSpan Timeout
-		{
-			get { return responseTimeout; }
-		}
+        /// <summary>
+        /// Returns the response timeout configured for this request.
+        /// </summary>
+        public TimeSpan Timeout
+        {
+            get { return responseTimeout; }
+        }
 
-		/// <summary>
-		/// Returns true if this entry has been waiting longer than 2x its timeout.
-		/// </summary>
-		public bool IsStale
-		{
-			get { return (DateTime.UtcNow - createdAt) > TimeSpan.FromTicks(responseTimeout.Ticks * 2); }
-		}
+        /// <summary>
+        /// Returns true if this entry has been waiting longer than 2x its timeout.
+        /// </summary>
+        public bool IsStale
+        {
+            get { return (DateTime.UtcNow - createdAt) > TimeSpan.FromTicks(responseTimeout.Ticks * 2); }
+        }
 
         /// <summary>
         /// Waits for response to be set, or for timeout to expire
@@ -170,8 +170,8 @@ namespace JulMar.Smpp
         private int pendingRequestLimit;
         private Dictionary<int, PduSyncronizer> pendingRequests = new Dictionary<int, PduSyncronizer>();
         private const int DefaultResponseTimeout = 30;
-		private const int DefaultPendingRequestLimit = 50;
-		private System.Threading.Timer staleReaper_;
+        private const int DefaultPendingRequestLimit = 50;
+        private System.Threading.Timer staleReaper_;
 
         private delegate unbind_resp UnbindDelegate();
         private delegate data_sm_resp SendDataDelegate(data_sm pdu);
@@ -404,7 +404,7 @@ namespace JulMar.Smpp
             this.mysid_ = sid;
             this.responseTimeout = TimeSpan.FromSeconds(DefaultResponseTimeout);
             this.pendingRequestLimit = DefaultPendingRequestLimit;
-			StartStaleReaper();
+            StartStaleReaper();
         }
 
         /// <summary>
@@ -418,7 +418,7 @@ namespace JulMar.Smpp
             this.responseTimeout = TimeSpan.FromSeconds(DefaultResponseTimeout);
             this.pendingRequestLimit = DefaultPendingRequestLimit;
             SetSocket(socket);
-			StartStaleReaper();
+            StartStaleReaper();
         }
 
         #endregion
@@ -496,7 +496,9 @@ namespace JulMar.Smpp
                             else
                             {
                                 _logger.LogWarning("Received response PDU with no matching request. seq={Sequence}", pdu.SequenceNumber);
-                                throw new SmppException("Invalid pdu response received with no pending request: " + pdu.ToString());
+                                re.AppendToBuffer = false;
+                                re.NextReadSize = SmppPdu.REQUIRED_SIZE;
+                                return;
                             }
                         }
 
@@ -581,31 +583,31 @@ namespace JulMar.Smpp
             PduSyncronizer sync = AddWaitingPdu(pdu);
             if (sync != null)
             {
-				try
+                try
                 {
-					if (IsBound && SendPdu(pdu))
+                    if (IsBound && SendPdu(pdu))
                     {
-						if (sync.WaitForResponse())
+                        if (sync.WaitForResponse())
                         {
-							response = sync.PduResponse as unbind_resp;
-							if (response == null)
-							{
-								response = new unbind_resp(pdu.SequenceNumber, sync.PduResponse.Status);
-							}
-						}
-						else
-						{
-							response = new unbind_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+                            response = sync.PduResponse as unbind_resp;
+                            if (response == null)
+                            {
+                                response = new unbind_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+                            }
+                        }
+                        else
+                        {
+                            response = new unbind_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
                         }
                     }
                     else
                     {
-						response = new unbind_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVBNDSTS);
+                        response = new unbind_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVBNDSTS);
                     }
                 }
-				finally
+                finally
                 {
-					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
+                    FindAndRemoveWaitingPdu(pdu.SequenceNumber);
                 }
             }
             else
@@ -647,31 +649,31 @@ namespace JulMar.Smpp
             PduSyncronizer sync = AddWaitingPdu(pdu);
             if (sync != null)
             {
-				try
+                try
                 {
-					if (IsBound && SendPdu(pdu))
+                    if (IsBound && SendPdu(pdu))
                     {
-						if (sync.WaitForResponse())
-						{
-							response = sync.PduResponse as enquire_link_resp;
-							if (response == null)
-							{
-								response = new enquire_link_resp(pdu.SequenceNumber, sync.PduResponse.Status);
-							}
-						}
-						else
+                        if (sync.WaitForResponse())
                         {
-							response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+                            response = sync.PduResponse as enquire_link_resp;
+                            if (response == null)
+                            {
+                                response = new enquire_link_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+                            }
+                        }
+                        else
+                        {
+                            response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
                         }
                     }
                     else
                     {
-						response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVCMDID);
+                        response = new enquire_link_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVCMDID);
                     }
                 }
-				finally
+                finally
                 {
-					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
+                    FindAndRemoveWaitingPdu(pdu.SequenceNumber);
                 }
             }
             else
@@ -713,31 +715,31 @@ namespace JulMar.Smpp
             PduSyncronizer sync = AddWaitingPdu(pdu);
             if (sync != null)
             {
-				try
+                try
                 {
-					if (IsBound && SendPdu(pdu))
+                    if (IsBound && SendPdu(pdu))
                     {
-						if (sync.WaitForResponse())
-						{
-							response = sync.PduResponse as data_sm_resp;
-							if (response == null)
-							{
-								response = new data_sm_resp(pdu.SequenceNumber, sync.PduResponse.Status);
-							}
-						}
-						else
+                        if (sync.WaitForResponse())
                         {
-							response = new data_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
+                            response = sync.PduResponse as data_sm_resp;
+                            if (response == null)
+                            {
+                                response = new data_sm_resp(pdu.SequenceNumber, sync.PduResponse.Status);
+                            }
+                        }
+                        else
+                        {
+                            response = new data_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RINVEXPIRY);
                         }
                     }
                     else
                     {
-						response = new data_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RDELIVERYFAILURE);
+                        response = new data_sm_resp(pdu.SequenceNumber, StatusCodes.ESME_RDELIVERYFAILURE);
                     }
                 }
-				finally
+                finally
                 {
-					FindAndRemoveWaitingPdu(pdu.SequenceNumber);
+                    FindAndRemoveWaitingPdu(pdu.SequenceNumber);
                 }
             }
             else
@@ -879,7 +881,7 @@ namespace JulMar.Smpp
         {
             lock (this.pendingRequests)
             {
-				if (this.pendingRequests.Count < this.pendingRequestLimit)
+                if (this.pendingRequests.Count < this.pendingRequestLimit)
                 {
                     PduSyncronizer sync = new PduSyncronizer(pdu, ResponseTimeout);
                     this.pendingRequests.Add(pdu.SequenceNumber, sync);
@@ -908,62 +910,62 @@ namespace JulMar.Smpp
             return sync;
         }
 
-		/// <summary>
-		/// Removes all pending request entries that have been waiting longer than
-		/// twice their configured response timeout. Called automatically by the
-		/// background reaper timer and can also be called manually.
-		/// </summary>
-		/// <returns>Number of stale entries removed</returns>
-		public int PurgeStaleRequests()
-		{
-			List<int> staleKeys = new List<int>();
-			lock (this.pendingRequests)
-			{
-				foreach (var kv in this.pendingRequests)
-				{
-					if (kv.Value.IsStale)
-						staleKeys.Add(kv.Key);
-				}
-				foreach (int key in staleKeys)
-					this.pendingRequests.Remove(key);
-			}
-			return staleKeys.Count;
-		}
+        /// <summary>
+        /// Removes all pending request entries that have been waiting longer than
+        /// twice their configured response timeout. Called automatically by the
+        /// background reaper timer and can also be called manually.
+        /// </summary>
+        /// <returns>Number of stale entries removed</returns>
+        public int PurgeStaleRequests()
+        {
+            List<int> staleKeys = new List<int>();
+            lock (this.pendingRequests)
+            {
+                foreach (var kv in this.pendingRequests)
+                {
+                    if (kv.Value.IsStale)
+                        staleKeys.Add(kv.Key);
+                }
+                foreach (int key in staleKeys)
+                    this.pendingRequests.Remove(key);
+            }
+            return staleKeys.Count;
+        }
 
-		/// <summary>
-		/// Removes all pending request entries regardless of age.
-		/// Use after a connection reset or when you need to force-clear the queue.
-		/// </summary>
-		public void ClearPendingRequests()
-		{
-			lock (this.pendingRequests)
-			{
-				this.pendingRequests.Clear();
-			}
-		}
+        /// <summary>
+        /// Removes all pending request entries regardless of age.
+        /// Use after a connection reset or when you need to force-clear the queue.
+        /// </summary>
+        public void ClearPendingRequests()
+        {
+            lock (this.pendingRequests)
+            {
+                this.pendingRequests.Clear();
+            }
+        }
 
-		/// <summary>
-		/// Returns the current number of pending request slots in use.
-		/// </summary>
-		public int PendingRequestCount
-		{
-			get { lock (this.pendingRequests) { return this.pendingRequests.Count; } }
-		}
+        /// <summary>
+        /// Returns the current number of pending request slots in use.
+        /// </summary>
+        public int PendingRequestCount
+        {
+            get { lock (this.pendingRequests) { return this.pendingRequests.Count; } }
+        }
 
-		/// <summary>
-		/// Starts a background timer that periodically purges stale pending requests.
-		/// Runs every ResponseTimeout interval.
-		/// </summary>
-		private void StartStaleReaper()
-		{
-			int intervalMs = (int)this.responseTimeout.TotalMilliseconds;
-			if (intervalMs <= 0) intervalMs = 30000;
-			staleReaper_ = new System.Threading.Timer(
-				_ => PurgeStaleRequests(),
-				null,
-				intervalMs,
-				intervalMs);
-		}
+        /// <summary>
+        /// Starts a background timer that periodically purges stale pending requests.
+        /// Runs every ResponseTimeout interval.
+        /// </summary>
+        private void StartStaleReaper()
+        {
+            int intervalMs = (int)this.responseTimeout.TotalMilliseconds;
+            if (intervalMs <= 0) intervalMs = 30000;
+            staleReaper_ = new System.Threading.Timer(
+                _ => PurgeStaleRequests(),
+                null,
+                intervalMs,
+                intervalMs);
+        }
 
         /// <summary>
         /// Overrides the base.ToString method
