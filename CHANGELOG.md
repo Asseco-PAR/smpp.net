@@ -6,6 +6,13 @@ This is a fork of [markjulmar/smpp.net](https://github.com/markjulmar/smpp.net)
 (last upstream commit: `51bad848b658fe42e7f427a85dcc1e6a0ab6f9bf`, MIT License). Changes made
 downstream of that point are documented below.
 
+## [1.2.1] - 2026-04-27
+### Fixed
+- Late SMPP responses no longer crash the session. When a response arrives after its request was already timed out or purged,
+  the response is silently discarded instead of throwing SmppException and closing the socket.
+
+---
+
 ## [1.2.0] - 2026-04-16
 ### Fixed
 - Pending request slots are now always released via try/finally, preventing zombie entries when SendPdu or WaitForResponse throws.
